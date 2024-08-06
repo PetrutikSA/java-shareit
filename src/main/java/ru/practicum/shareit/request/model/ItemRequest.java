@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request.model;
 
-
 import lombok.Data;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -13,6 +12,6 @@ public class ItemRequest {
     private String name;
     private String description;
     private User requester;
-    private boolean isRequestActive;
+    private ItemRequestStatus status;
     private List<Item> offeredItems;
 }
