@@ -1,12 +1,14 @@
 package ru.practicum.shareit.user.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
+import ru.practicum.shareit.util.annotation.NullOrNotBlank;
 
 @Data
 public class UserUpdateDto {
-    @NotBlank
+    @NullOrNotBlank
     private String name;
-    @NotBlank
+    @NullOrNotBlank
+    @Email
     private String email;
 }

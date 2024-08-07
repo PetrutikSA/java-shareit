@@ -1,4 +1,4 @@
-package ru.practicum.shareit.exception;
+package ru.practicum.shareit.util.exception;
 
 public class InternalServerException extends RuntimeException {
     public InternalServerException(String message) {
