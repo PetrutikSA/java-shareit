@@ -32,8 +32,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User updateUser(User user) {
-        return users.put(user.getId(), user);
+    public boolean updateUser(User user) {
+        users.put(user.getId(), user);
+        return true;
     }
 
     @Override

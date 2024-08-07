@@ -12,7 +12,7 @@ public interface UserRepository {
 
     List<User> getAllUsers();
 
-    User updateUser(User user);
+    boolean updateUser(User user);
 
     boolean deleteUser(Long id);
 }
