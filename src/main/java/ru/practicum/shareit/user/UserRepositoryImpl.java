@@ -42,4 +42,11 @@ public class UserRepositoryImpl implements UserRepository {
         User user = users.remove(id);
         return user != null;
     }
+
+    @Override
+    public boolean isEmailAlreadyInUse(String email) {
+        return users.values().stream()
+                .map(User::getEmail)
+                .anyMatch(emailDb -> emailDb.equals((email)));
+    }
 }

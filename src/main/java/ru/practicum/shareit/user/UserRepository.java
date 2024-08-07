@@ -15,4 +15,6 @@ public interface UserRepository {
     boolean updateUser(User user);
 
     boolean deleteUser(Long id);
+
+    boolean isEmailAlreadyInUse(String email);
 }

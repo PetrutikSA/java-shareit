@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.util.exception.UserConflictException;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserCreateDto userCreateDto) {
         User user = UserMapper.MAPPER.userCreateToUser(userCreateDto);
+        emailVacantValidation(user.getEmail());
         user = userRepository.createUser(user);
         log.info("Created new user: {}", user);
         return UserMapper.MAPPER.userToUserDto(user);
@@ -43,6 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         User user = getUserFromRepository(id);
+        String updatedEmail = userUpdateDto.getEmail();
+        if (updatedEmail != null && !updatedEmail.equals(user.getEmail())) {
+            emailVacantValidation(userUpdateDto.getEmail());
+        }
         UserMapper.MAPPER.userUpdateToUser(userUpdateDto, user);
         boolean isUpdated = userRepository.updateUser(user);
         if (!isUpdated) throw new InternalServerException(String.format("Could not update user: %s", user.toString()));
@@ -59,5 +65,10 @@ public class UserServiceImpl implements UserService {
     private User getUserFromRepository(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException(id, User.class));
+    }
+
+    private void emailVacantValidation(String email) {
+        if (userRepository.isEmailAlreadyInUse(email))
+            throw new UserConflictException(String.format("User with email %s already registered", email));
     }
 }
