@@ -11,10 +11,10 @@ import ru.practicum.shareit.item.model.Item;
 public interface ItemMapper {
     ItemMapper MAPPER = Mappers.getMapper(ItemMapper.class);
 
-    Item itemCreateToItem (ItemCreateDto itemCreateDto);
+    Item itemCreateToItem(ItemCreateDto itemCreateDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void itemUpdateToItem (ItemUpdateDto itemUpdateDto, @MappingTarget Item item);
+    void itemUpdateToItem(ItemUpdateDto itemUpdateDto, @MappingTarget Item item);
 
-    ItemDto itemToItemDto (Item item);
+    ItemDto itemToItemDto(Item item);
 }
