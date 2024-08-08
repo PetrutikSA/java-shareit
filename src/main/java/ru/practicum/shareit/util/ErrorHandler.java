@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.util.exception.AccessForbiddenException;
 import ru.practicum.shareit.util.exception.InternalServerException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 import ru.practicum.shareit.util.exception.UserConflictException;
@@ -31,5 +32,11 @@ public class ErrorHandler {
     public ErrorResponse handleInternalServerException(InternalServerException exception) {
         log.warn(exception.getMessage(), exception);
         return ErrorResponse.create(exception, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler
+    public ErrorResponse handleAccessForbiddenException(AccessForbiddenException exception) {
+        log.warn(exception.getMessage(), exception);
+        return ErrorResponse.create(exception, HttpStatus.FORBIDDEN, exception.getMessage());
     }
 }
