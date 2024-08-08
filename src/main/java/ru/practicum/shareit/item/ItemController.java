@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,37 +21,40 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 public class ItemController {
+    private final ItemService itemService;
 
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @RequestBody @Validated ItemCreateDto itemCreateDto) {
-        return null;
+        return itemService.createItem(userId, itemCreateDto);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
-        return null;
+        return itemService.getItemById(userId, itemId);
     }
 
     @GetMapping
     public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return null;
+        return itemService.getAllItems(userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @RequestBody @Validated ItemUpdateDto itemUpdateDto,
                               @PathVariable Long itemId) {
-        return null;
+        return itemService.updateItem(userId, itemUpdateDto, itemId);
     }
 
     @DeleteMapping("/{itemId}")
     public void deleteItem(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
+        itemService.deleteItem(userId, itemId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam("text") @NotBlank String text) {
-        return null;
+        return itemService.searchItem(text);
     }
 }
