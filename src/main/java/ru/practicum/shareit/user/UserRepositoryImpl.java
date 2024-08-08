@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findUserById(Long id) {
-        return (users.containsKey(id)) ? Optional.ofNullable(users.get(id)) : Optional.empty();
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
