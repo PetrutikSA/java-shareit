@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -17,7 +18,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+@Slf4j
+public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
@@ -27,6 +29,7 @@ public class ItemServiceImpl implements ItemService{
         Item item = ItemMapper.MAPPER.itemCreateToItem(itemCreateDto);
         item.setOwner(user);
         item = itemRepository.createItem(userId, item);
+        log.info("Created new item: {}", item);
         return ItemMapper.MAPPER.itemToItemDto(item);
     }
 
@@ -54,6 +57,7 @@ public class ItemServiceImpl implements ItemService{
         ItemMapper.MAPPER.itemUpdateToItem(itemUpdateDto, item);
         boolean isUpdated = itemRepository.updateItem(userId, item, itemId);
         if (!isUpdated) throw new InternalServerException(String.format("Could not update item: %s", item));
+        log.info("Updated item: {}", item);
         return ItemMapper.MAPPER.itemToItemDto(item);
     }
 
@@ -65,6 +69,7 @@ public class ItemServiceImpl implements ItemService{
             throw new AccessForbiddenException("Item delete could be performed only by item's owner");
         boolean isDeleted = itemRepository.updateItem(userId, item, itemId);
         if (!isDeleted) throw new InternalServerException(String.format("Could not delete item: %s", item));
+        log.info("Deleted item: {}", item);
     }
 
     @Override

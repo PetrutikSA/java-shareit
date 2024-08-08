@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         UserMapper.MAPPER.userUpdateToUser(userUpdateDto, user);
         boolean isUpdated = userRepository.updateUser(user);
         if (!isUpdated) throw new InternalServerException(String.format("Could not update user: %s", user.toString()));
+        log.info("Updated user: {}", user);
         return UserMapper.MAPPER.userToUserDto(user);
     }
 
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
         User user = getUserFromRepository(id); //check existence of User
         boolean isDeleted = userRepository.deleteUser(id);
         if (!isDeleted) throw new InternalServerException(String.format("Could not delete user: %s", user.toString()));
+        log.info("Deleted new user: {}", user);
     }
 
     private User getUserFromRepository(Long id) {

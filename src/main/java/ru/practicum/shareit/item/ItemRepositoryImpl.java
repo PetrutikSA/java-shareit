@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ItemRepositoryImpl implements ItemRepository{
+public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, Map<Long, Item>> items = new HashMap<>(); // userId, itemId, item
     private long currentMaxId = 0;
 
