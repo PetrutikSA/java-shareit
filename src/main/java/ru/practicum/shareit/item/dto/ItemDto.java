@@ -7,5 +7,5 @@ public class ItemDto {
     private long id;
     private String name;
     private String description;
-    private boolean available;
+    private Boolean available;
 }

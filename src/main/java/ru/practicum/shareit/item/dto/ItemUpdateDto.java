@@ -1,13 +1,13 @@
 package ru.practicum.shareit.item.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import ru.practicum.shareit.util.annotation.NullOrNotBlank;
 
 @Data
 public class ItemUpdateDto {
-    @NotBlank
+    @NullOrNotBlank
     private String name;
-    @NotBlank
+    @NullOrNotBlank
     private String description;
-    private boolean available;
+    private Boolean available;
 }
