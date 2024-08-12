@@ -19,7 +19,8 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item createItem(Long userId, Item item) {
         currentMaxId++;
         item.setId(currentMaxId);
-        Map<Long, Item> userItems = items.putIfAbsent(userId, new HashMap<>());
+        items.putIfAbsent(userId, new HashMap<>());
+        Map<Long, Item> userItems = items.get(userId);
         if (userItems != null) {
             userItems.put(currentMaxId, item);
         } else {
@@ -31,9 +32,12 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Optional<Item> findItemById(Long userId, Long itemId) {
-        Map<Long, Item> userItems = items.get(userId);
-        if (userItems == null) return Optional.empty();
-        return Optional.ofNullable(userItems.get(itemId));
+        for (Map<Long, Item> entry : items.values()) {
+            if (entry.containsKey(itemId)) {
+                return Optional.ofNullable(entry.get(itemId));
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
