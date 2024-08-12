@@ -14,6 +14,7 @@ import ru.practicum.shareit.util.exception.AccessForbiddenException;
 import ru.practicum.shareit.util.exception.InternalServerException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItemById(Long userId, Long itemId) {
         getUserFromRepository(userId); //user existence check
-        Item item = getItemFromRepository(userId, itemId);
+        Item item = getItemFromRepository(itemId);
         return ItemMapper.MAPPER.itemToItemDto(item);
     }
 
@@ -51,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(Long userId, ItemUpdateDto itemUpdateDto, Long itemId) {
         getUserFromRepository(userId); //user existence check
-        Item item = getItemFromRepository(userId, itemId);
+        Item item = getItemFromRepository(itemId);
         if (item.getOwner().getId() != userId)
             throw new AccessForbiddenException("Item update could be performed only by item's owner");
         ItemMapper.MAPPER.itemUpdateToItem(itemUpdateDto, item);
@@ -64,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItem(Long userId, Long itemId) {
         getUserFromRepository(userId); //user existence check
-        Item item = getItemFromRepository(userId, itemId);
+        Item item = getItemFromRepository(itemId);
         if (item.getOwner().getId() != userId)
             throw new AccessForbiddenException("Item delete could be performed only by item's owner");
         boolean isDeleted = itemRepository.updateItem(userId, item, itemId);
@@ -74,7 +75,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String text) {
-        return null;
+        if (text.isBlank() || text.isEmpty()) return new ArrayList<>();
+        return itemRepository.searchItem(text).stream()
+                .map(ItemMapper.MAPPER::itemToItemDto)
+                .toList();
     }
 
     private User getUserFromRepository(Long id) {
@@ -82,8 +86,8 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException(id, User.class));
     }
 
-    private Item getItemFromRepository(Long userId, Long itemId) {
-        return itemRepository.findItemById(userId, itemId)
+    private Item getItemFromRepository(Long itemId) {
+        return itemRepository.findItemById(itemId)
                 .orElseThrow(() -> new NotFoundException(itemId, Item.class));
     }
 }

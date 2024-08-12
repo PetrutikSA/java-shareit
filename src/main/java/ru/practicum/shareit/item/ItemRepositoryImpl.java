@@ -6,9 +6,11 @@ import ru.practicum.shareit.util.exception.InternalServerException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
@@ -31,7 +33,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> findItemById(Long userId, Long itemId) {
+    public Optional<Item> findItemById(Long itemId) {
         for (Map<Long, Item> entry : items.values()) {
             if (entry.containsKey(itemId)) {
                 return Optional.ofNullable(entry.get(itemId));
@@ -61,6 +63,17 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> searchItem(String text) {
-        return null;
+        Set<Item> allItems = new HashSet<>();
+        for (Map<Long, Item> entry : items.values()) {
+            allItems.addAll(entry.values());
+        }
+        return allItems.stream()
+                .filter(Item::getAvailable)
+                .filter(item -> {
+                    String name = item.getName().toUpperCase();
+                    String description = item.getDescription().toUpperCase();
+                    return name.contains(text.toUpperCase()) || description.contains(text.toUpperCase());
+                })
+                .toList();
     }
 }
