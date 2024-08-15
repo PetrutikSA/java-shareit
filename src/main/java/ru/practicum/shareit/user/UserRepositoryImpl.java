@@ -4,13 +4,16 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
+    private final Set<String> usersEmails = new HashSet<>();
     private long currentMaxId = 0;
 
     @Override
@@ -18,6 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
         currentMaxId++;
         user.setId(currentMaxId);
         users.put(currentMaxId, user);
+        usersEmails.add(user.getEmail());
         return user;
     }
 
@@ -45,8 +49,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isEmailAlreadyInUse(String email) {
-        return users.values().stream()
-                .map(User::getEmail)
-                .anyMatch(emailDb -> emailDb.equals((email)));
+        return usersEmails.contains(email);
     }
 }
