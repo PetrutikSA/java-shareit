@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemFromRepository(itemId);
         if (item.getOwner().getId() != userId)
             throw new AccessForbiddenException("Item delete could be performed only by item's owner");
-        boolean isDeleted = itemRepository.updateItem(userId, item, itemId);
+        boolean isDeleted = itemRepository.deleteItem(userId, itemId);
         if (!isDeleted) throw new InternalServerException(String.format("Could not delete item: %s", item));
         log.info("Deleted item: {}", item);
     }
