@@ -2,14 +2,13 @@ package ru.practicum.shareit.item.dto;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.item.model.Item;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ItemMapper {
-    ItemMapper MAPPER = Mappers.getMapper(ItemMapper.class);
 
     Item itemCreateToItem(ItemCreateDto itemCreateDto);
 

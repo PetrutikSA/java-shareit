@@ -23,29 +23,30 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ItemMapper itemMapper;
 
     @Override
     public ItemDto createItem(Long userId, ItemCreateDto itemCreateDto) {
         User user = getUserFromRepository(userId);
-        Item item = ItemMapper.MAPPER.itemCreateToItem(itemCreateDto);
+        Item item = itemMapper.itemCreateToItem(itemCreateDto);
         item.setOwner(user);
         item = itemRepository.createItem(userId, item);
         log.info("Created new item: {}", item);
-        return ItemMapper.MAPPER.itemToItemDto(item);
+        return itemMapper.itemToItemDto(item);
     }
 
     @Override
     public ItemDto getItemById(Long userId, Long itemId) {
         getUserFromRepository(userId); //user existence check
         Item item = getItemFromRepository(itemId);
-        return ItemMapper.MAPPER.itemToItemDto(item);
+        return itemMapper.itemToItemDto(item);
     }
 
     @Override
     public List<ItemDto> getAllItems(Long userId) {
         getUserFromRepository(userId); //user existence check
         return itemRepository.getAllItems(userId).stream()
-                .map(ItemMapper.MAPPER::itemToItemDto)
+                .map(itemMapper::itemToItemDto)
                 .toList();
     }
 
@@ -55,11 +56,11 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemFromRepository(itemId);
         if (item.getOwner().getId() != userId)
             throw new AccessForbiddenException("Item update could be performed only by item's owner");
-        ItemMapper.MAPPER.itemUpdateToItem(itemUpdateDto, item);
+        itemMapper.itemUpdateToItem(itemUpdateDto, item);
         boolean isUpdated = itemRepository.updateItem(userId, item, itemId);
         if (!isUpdated) throw new InternalServerException(String.format("Could not update item: %s", item));
         log.info("Updated item: {}", item);
-        return ItemMapper.MAPPER.itemToItemDto(item);
+        return itemMapper.itemToItemDto(item);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> searchItem(String text) {
         if (text.isBlank() || text.isEmpty()) return new ArrayList<>();
         return itemRepository.searchItem(text).stream()
-                .map(ItemMapper.MAPPER::itemToItemDto)
+                .map(itemMapper::itemToItemDto)
                 .toList();
     }
 

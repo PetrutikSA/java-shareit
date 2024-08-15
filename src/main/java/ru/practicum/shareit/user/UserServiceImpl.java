@@ -19,26 +19,27 @@ import java.util.List;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserDto createUser(UserCreateDto userCreateDto) {
-        User user = UserMapper.MAPPER.userCreateToUser(userCreateDto);
+        User user = userMapper.userCreateToUser(userCreateDto);
         emailVacantValidation(user.getEmail());
         user = userRepository.createUser(user);
         log.info("Created new user: {}", user);
-        return UserMapper.MAPPER.userToUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
     public UserDto getUserById(Long id) {
         User user = getUserFromRepository(id);
-        return UserMapper.MAPPER.userToUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         return userRepository.getAllUsers().stream()
-                .map(UserMapper.MAPPER::userToUserDto)
+                .map(userMapper::userToUserDto)
                 .toList();
     }
 
@@ -49,11 +50,11 @@ public class UserServiceImpl implements UserService {
         if (updatedEmail != null && !updatedEmail.equals(user.getEmail())) {
             emailVacantValidation(userUpdateDto.getEmail());
         }
-        UserMapper.MAPPER.userUpdateToUser(userUpdateDto, user);
+        userMapper.userUpdateToUser(userUpdateDto, user);
         boolean isUpdated = userRepository.updateUser(user);
         if (!isUpdated) throw new InternalServerException(String.format("Could not update user: %s", user.toString()));
         log.info("Updated user: {}", user);
-        return UserMapper.MAPPER.userToUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override

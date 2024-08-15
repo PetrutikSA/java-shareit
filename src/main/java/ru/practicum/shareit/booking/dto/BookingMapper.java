@@ -2,14 +2,13 @@ package ru.practicum.shareit.booking.dto;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.booking.model.Booking;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface BookingMapper {
-    BookingMapper MAPPER = Mappers.getMapper(BookingMapper.class);
 
     Booking bookingCreateToBooking(BookingCreateDto bookingCreateDto);
 
