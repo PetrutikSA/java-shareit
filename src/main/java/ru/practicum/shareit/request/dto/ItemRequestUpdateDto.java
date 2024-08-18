@@ -1,14 +1,12 @@
 package ru.practicum.shareit.request.dto;
 
-import ru.practicum.shareit.item.model.Item;
+import jakarta.validation.constraints.NotBlank;
 import ru.practicum.shareit.request.model.ItemRequestStatus;
 
-import java.util.List;
-
-public class ItemRequestDto {
-    private long id;
+public class ItemRequestUpdateDto {
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
     private ItemRequestStatus status;
-    private List<Item> offeredItems;
 }
