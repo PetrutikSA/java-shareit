@@ -23,7 +23,7 @@ public class Item {
     private String name;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "item_id", nullable = false)
     private User owner;
     private Boolean available;
 }
