@@ -44,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItems(Long userId) {
         getUserFromRepository(userId); //user existence check
-        return itemRepository.findAllByUserId(userId).stream()
+        return itemRepository.findAllByOwnerId(userId).stream()
                 .map(itemMapper::itemToItemDto)
                 .toList();
     }
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchItem(String text) {
         if (text.isBlank() || text.isEmpty()) return new ArrayList<>();
-        return itemRepository.findAllByNameOrByDescription(text).stream()
+        return itemRepository.findAllByNameOrDescription(text).stream()
                 .map(itemMapper::itemToItemDto)
                 .toList();
     }
