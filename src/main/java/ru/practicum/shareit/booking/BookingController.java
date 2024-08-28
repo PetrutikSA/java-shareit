@@ -25,31 +25,31 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createBookingRequest(@RequestBody BookingCreateDto bookingCreateDto) {
-        return null;
+        return bookingService.createBookingRequest(bookingCreateDto);
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto replyToBookingRequest(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                             @PathVariable Long bookingId,
                                             @RequestParam boolean approved) {
-        return null;
+        return bookingService.replyToBookingRequest(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                      @PathVariable Long bookingId) {
-        return null;
+        return bookingService.getBookingById(userId, bookingId);
     }
 
     @GetMapping
     public List<BookingDto> getAllBookersBookings(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                                   @RequestParam(defaultValue = "ALL") BookingState state) {
-        return null;
+        return bookingService.getAllBookersBookings(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getAllOwnersBookings(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                                  @RequestParam(defaultValue = "ALL") BookingState state) {
-        return null;
+        return bookingService.getAllOwnersBookings(userId, state);
     }
 }
