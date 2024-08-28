@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import ru.practicum.shareit.booking.model.BookingState;
 
 import java.time.LocalDate;
 
@@ -15,4 +16,5 @@ public class BookingCreateDto {
     @NotNull
     @Future
     private LocalDate end;
+    private BookingState state;
 }
