@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dto.CommentCreateDto;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -100,6 +102,11 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAllByNameOrDescription(text).stream()
                 .map(itemMapper::itemToItemDto)
                 .toList();
+    }
+
+    @Override
+    public CommentDto createComment(Long userId, Long itemId, CommentCreateDto commentCreateDto) {
+        return null;
     }
 
     private User getUserFromRepository(Long id) {
