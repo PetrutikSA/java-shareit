@@ -16,4 +16,6 @@ public interface BookingMapper {
     void bookingUpdateToBooking(BookingUpdateDto bookingUpdateDto, @MappingTarget Booking booking);
 
     BookingDto bookingToBookingDto(Booking booking);
+
+    BookingOnlyDatesDto bookingToBookingOnlyDatesDto(Booking booking);
 }

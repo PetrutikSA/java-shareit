@@ -16,6 +16,7 @@ import ru.practicum.shareit.config.HeadersConfig;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader(HeadersConfig.USER_ID) Long userId) {
+    public List<ItemWithNearestBookingDatesDto> getAllItems(@RequestHeader(HeadersConfig.USER_ID) Long userId) {
         return itemService.getAllItems(userId);
     }
 

@@ -55,4 +55,24 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             where o.id = ?1 and b.start <= ?2 and b.end >= ?2
             """)
     List<Booking> findAllByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqual(Long ownerId, LocalDateTime dateTime);
+
+    @Query("""
+            select b, min(b.start)
+            from Booking as b
+            join fetch b.item as i
+            join i.owner as o
+            where o.id = ?1 and b.start > ?2
+            group by b, i.id
+            """)
+    List<Booking> findAllByItemOwnerIdNextItemBookingFromDate(Long ownerId, LocalDateTime dateTime);
+
+    @Query("""
+            select b, max(b.start)
+            from Booking as b
+            join fetch b.item as i
+            join i.owner as o
+            where o.id = ?1 and b.start < ?2
+            group by b, i.id
+            """)
+    List<Booking> findAllByItemOwnerIdLastItemBookingFromDate(Long ownerId, LocalDateTime dateTime);
 }

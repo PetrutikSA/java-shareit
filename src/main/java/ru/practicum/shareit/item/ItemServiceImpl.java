@@ -3,18 +3,26 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.exception.AccessForbiddenException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +30,9 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
     private final ItemMapper itemMapper;
+    private final BookingMapper bookingMapper;
 
     @Override
     public ItemDto createItem(Long userId, ItemCreateDto itemCreateDto) {
@@ -42,11 +52,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItems(Long userId) {
+    public List<ItemWithNearestBookingDatesDto> getAllItems(Long userId) {
         getUserFromRepository(userId); //user existence check
-        return itemRepository.findAllByOwnerId(userId).stream()
-                .map(itemMapper::itemToItemDto)
-                .toList();
+        Map<Long, ItemWithNearestBookingDatesDto> items = itemRepository.findAllByOwnerId(userId).stream()
+                .map(itemMapper::itemToItemWithNearestDatesDto)
+                .collect(Collectors.toMap(ItemWithNearestBookingDatesDto::getId, Function.identity()));
+        List<Booking> bookingNextAll = bookingRepository
+                .findAllByItemOwnerIdNextItemBookingFromDate(userId, LocalDateTime.now());
+        List<Booking> bookingLastAll = bookingRepository
+                .findAllByItemOwnerIdLastItemBookingFromDate(userId, LocalDateTime.now());
+        for (Booking booking : bookingNextAll) {
+            ItemWithNearestBookingDatesDto item = items.get(booking.getItem().getId());
+            item.setNext(bookingMapper.bookingToBookingOnlyDatesDto(booking));
+        }
+        for (Booking booking : bookingLastAll) {
+            ItemWithNearestBookingDatesDto item = items.get(booking.getItem().getId());
+            item.setLast(bookingMapper.bookingToBookingOnlyDatesDto(booking));
+        }
+        return items.values().stream().toList();
     }
 
     @Override

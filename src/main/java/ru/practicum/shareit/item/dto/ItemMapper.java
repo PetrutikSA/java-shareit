@@ -16,4 +16,6 @@ public interface ItemMapper {
     void itemUpdateToItem(ItemUpdateDto itemUpdateDto, @MappingTarget Item item);
 
     ItemDto itemToItemDto(Item item);
+
+    ItemWithNearestBookingDatesDto itemToItemWithNearestDatesDto(Item item);
 }
