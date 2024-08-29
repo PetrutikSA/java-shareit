@@ -7,11 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.user.model.User;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +31,6 @@ public class Item {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
     private Boolean available;
+    @OneToMany(mappedBy = "item")
+    private List<Comment> comments;
 }
