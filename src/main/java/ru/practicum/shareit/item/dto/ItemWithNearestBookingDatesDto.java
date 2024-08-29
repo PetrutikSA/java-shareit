@@ -9,6 +9,6 @@ public class ItemWithNearestBookingDatesDto {
     private String name;
     private String description;
     private Boolean available;
-    private BookingOnlyDatesDto last;
-    private BookingOnlyDatesDto next;
+    private BookingOnlyDatesDto lastBooking;
+    private BookingOnlyDatesDto nextBooking;
 }

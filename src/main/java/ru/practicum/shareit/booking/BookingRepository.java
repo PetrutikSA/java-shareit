@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
@@ -61,18 +62,20 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             from Booking as b
             join fetch b.item as i
             join i.owner as o
-            where o.id = ?1 and b.start > ?2
+            where o.id = ?1 and i.id in (?2) and b.start > ?3
             group by b, i.id
             """)
-    List<Booking> findAllByItemOwnerIdNextItemBookingFromDate(Long ownerId, LocalDateTime dateTime);
+    List<Booking> findAllByItemOwnerIdNextItemBookingFromDate(Long ownerId, Set<Long> itemIds, LocalDateTime dateTime);
 
     @Query("""
             select b, max(b.start)
             from Booking as b
             join fetch b.item as i
             join i.owner as o
-            where o.id = ?1 and b.start < ?2
+            where o.id = ?1 and i.id in (?2) and b.start < ?3
             group by b, i.id
             """)
-    List<Booking> findAllByItemOwnerIdLastItemBookingFromDate(Long ownerId, LocalDateTime dateTime);
+    List<Booking> findAllByItemOwnerIdLastItemBookingFromDate(Long ownerId, Set<Long> itemIds, LocalDateTime dateTime);
+
+    List<Booking> findAllByBookerIdAndItemIdAndEndLessThan(Long bookerId, Long itemId, LocalDateTime localDateTime);
 }

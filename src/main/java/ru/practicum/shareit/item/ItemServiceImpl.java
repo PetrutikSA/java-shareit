@@ -8,21 +8,25 @@ import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.exception.AccessForbiddenException;
+import ru.practicum.shareit.util.exception.BadRequestException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,8 +37,10 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
     private final ItemMapper itemMapper;
     private final BookingMapper bookingMapper;
+    private final CommentMapper commentMapper;
 
     @Override
     public ItemDto createItem(Long userId, ItemCreateDto itemCreateDto) {
@@ -47,10 +53,23 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItemById(Long userId, Long itemId) {
+    public ItemWithNearestBookingDatesDto getItemById(Long userId, Long itemId) {
         getUserFromRepository(userId); //user existence check
         Item item = getItemFromRepository(itemId);
-        return itemMapper.itemToItemDto(item);
+        Booking bookingNext = bookingRepository
+                .findAllByItemOwnerIdNextItemBookingFromDate(userId, Set.of(item.getId()), LocalDateTime.now())
+                .stream()
+                .findAny()
+                .orElse(null);
+        Booking bookingLast = bookingRepository
+                .findAllByItemOwnerIdLastItemBookingFromDate(userId, Set.of(item.getId()), LocalDateTime.now())
+                .stream()
+                .findAny()
+                .orElse(null);
+        ItemWithNearestBookingDatesDto itemWithNearestBookingDatesDto = itemMapper.itemToItemWithNearestDatesDto(item);
+        itemWithNearestBookingDatesDto.setLastBooking(bookingMapper.bookingToBookingOnlyDatesDto(bookingLast));
+        itemWithNearestBookingDatesDto.setNextBooking(bookingMapper.bookingToBookingOnlyDatesDto(bookingNext));
+        return itemWithNearestBookingDatesDto;
     }
 
     @Override
@@ -60,16 +79,16 @@ public class ItemServiceImpl implements ItemService {
                 .map(itemMapper::itemToItemWithNearestDatesDto)
                 .collect(Collectors.toMap(ItemWithNearestBookingDatesDto::getId, Function.identity()));
         List<Booking> bookingNextAll = bookingRepository
-                .findAllByItemOwnerIdNextItemBookingFromDate(userId, LocalDateTime.now());
+                .findAllByItemOwnerIdNextItemBookingFromDate(userId, items.keySet(), LocalDateTime.now());
         List<Booking> bookingLastAll = bookingRepository
-                .findAllByItemOwnerIdLastItemBookingFromDate(userId, LocalDateTime.now());
+                .findAllByItemOwnerIdLastItemBookingFromDate(userId, items.keySet(), LocalDateTime.now());
         for (Booking booking : bookingNextAll) {
             ItemWithNearestBookingDatesDto item = items.get(booking.getItem().getId());
-            item.setNext(bookingMapper.bookingToBookingOnlyDatesDto(booking));
+            item.setNextBooking(bookingMapper.bookingToBookingOnlyDatesDto(booking));
         }
         for (Booking booking : bookingLastAll) {
             ItemWithNearestBookingDatesDto item = items.get(booking.getItem().getId());
-            item.setLast(bookingMapper.bookingToBookingOnlyDatesDto(booking));
+            item.setLastBooking(bookingMapper.bookingToBookingOnlyDatesDto(booking));
         }
         return items.values().stream().toList();
     }
@@ -106,7 +125,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto createComment(Long userId, Long itemId, CommentCreateDto commentCreateDto) {
-        return null;
+        User author = getUserFromRepository(userId);
+        Item item = getItemFromRepository(itemId);
+        bookingRepository
+                .findAllByBookerIdAndItemIdAndEndLessThan(userId, itemId, LocalDateTime.now()).stream().findAny()
+                .orElseThrow(() -> new BadRequestException("Comment add could be performed only by item's bookers"));
+        Comment comment = commentMapper.commentCreateDtoToComment(commentCreateDto);
+        comment.setItem(item);
+        comment.setAuthor(author);
+        comment.setCreated(LocalDateTime.now());
+        comment = commentRepository.save(comment);
+        return commentMapper.commentToCommentDto(comment);
     }
 
     private User getUserFromRepository(Long id) {

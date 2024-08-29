@@ -35,7 +35,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@RequestHeader(HeadersConfig.USER_ID) Long userId, @PathVariable Long itemId) {
+    public ItemWithNearestBookingDatesDto getItemById(@RequestHeader(HeadersConfig.USER_ID) Long userId, @PathVariable Long itemId) {
         return itemService.getItemById(userId, itemId);
     }
 
@@ -61,6 +61,7 @@ public class ItemController {
         return itemService.searchItem(text);
     }
 
+    @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                     @PathVariable Long itemId,
                                     @RequestBody @Validated CommentCreateDto commentCreateDto) {

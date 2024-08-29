@@ -12,7 +12,7 @@ import java.util.List;
 public interface ItemService {
     ItemDto createItem(Long userId, ItemCreateDto itemCreateDto);
 
-    ItemDto getItemById(Long userId, Long itemId);
+    ItemWithNearestBookingDatesDto getItemById(Long userId, Long itemId);
 
     List<ItemWithNearestBookingDatesDto> getAllItems(Long userId);
 
