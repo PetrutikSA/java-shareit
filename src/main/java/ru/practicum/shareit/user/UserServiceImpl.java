@@ -3,7 +3,6 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.util.exception.InternalServerException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserCreateDto userCreateDto) {
         User user = userMapper.userCreateToUser(userCreateDto);
         emailVacantValidation(user.getEmail());
-        user = userRepository.createUser(user);
+        user = userRepository.save(user);
         log.info("Created new user: {}", user);
         return userMapper.userToUserDto(user);
     }
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers().stream()
+        return userRepository.findAll().stream()
                 .map(userMapper::userToUserDto)
                 .toList();
     }
@@ -51,8 +50,7 @@ public class UserServiceImpl implements UserService {
             emailVacantValidation(userUpdateDto.getEmail());
         }
         userMapper.userUpdateToUser(userUpdateDto, user);
-        boolean isUpdated = userRepository.updateUser(user);
-        if (!isUpdated) throw new InternalServerException(String.format("Could not update user: %s", user.toString()));
+        user = userRepository.save(user);
         log.info("Updated user: {}", user);
         return userMapper.userToUserDto(user);
     }
@@ -60,18 +58,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         User user = getUserFromRepository(id); //check existence of User
-        boolean isDeleted = userRepository.deleteUser(id);
-        if (!isDeleted) throw new InternalServerException(String.format("Could not delete user: %s", user.toString()));
+        userRepository.deleteById(id);
         log.info("Deleted new user: {}", user);
     }
 
     private User getUserFromRepository(Long id) {
-        return userRepository.findUserById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id, User.class));
     }
 
     private void emailVacantValidation(String email) {
-        if (userRepository.isEmailAlreadyInUse(email))
+        if (userRepository.existsByEmail(email))
             throw new UserConflictException(String.format("User with email %s already registered", email));
     }
 }

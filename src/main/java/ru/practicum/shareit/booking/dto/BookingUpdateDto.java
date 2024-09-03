@@ -2,12 +2,16 @@ package ru.practicum.shareit.booking.dto;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
+import lombok.Data;
+import ru.practicum.shareit.booking.model.BookingStatus;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Data
 public class BookingUpdateDto {
     @FutureOrPresent
-    private LocalDate start;
+    private LocalDateTime start;
     @Future
-    private LocalDate end;
+    private LocalDateTime end;
+    private BookingStatus status;
 }
