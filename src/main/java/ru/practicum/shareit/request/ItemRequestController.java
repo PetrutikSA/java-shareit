@@ -36,14 +36,11 @@ public class ItemRequestController {
         return itemRequestService.updateItemRequest(userId, itemRequestId, itemRequestUpdateDto);
     }
 
-    //Получить список своих запросов вместе с данными об ответах на них.
-    //Запросы должны возвращаться отсортированными от более новых к более старым.
     @GetMapping
     public List<ItemRequestDto> getAllOwnItemRequests(@RequestHeader(HeadersConfig.USER_ID) Long userId) {
         return itemRequestService.getAllOwnItemRequests(userId);
     }
 
-    //получить список запросов, созданных другими пользователями.
     @GetMapping("/all")
     public List<ItemRequestDto> getAllOthersItemRequests(@RequestHeader(HeadersConfig.USER_ID) Long userId) {
         return itemRequestService.getAllOthersItemRequests(userId);
