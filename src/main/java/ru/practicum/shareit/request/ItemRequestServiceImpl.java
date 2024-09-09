@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
-import ru.practicum.shareit.request.dto.ItemRequestUpdateDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.model.ItemRequestStatus;
 import ru.practicum.shareit.user.UserRepository;
@@ -35,11 +34,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestDto updateItemRequest(Long userId, Long itemRequestId, ItemRequestUpdateDto itemRequestUpdateDto) {
-        return null;
-    }
-
-    @Override
     public List<ItemRequestDto> getAllOwnItemRequests(Long userId) {
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequesterId(userId);
         return itemRequests.stream()
@@ -59,13 +53,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto getItemRequestById(Long userId, Long itemRequestId) {
-        ItemRequest itemRequest = itemRequestRepository.findById(itemRequestId)
-                .orElseThrow(() -> new NotFoundException(itemRequestId, ItemRequest.class));
+        ItemRequest itemRequest = getItemRequestFromRepository(itemRequestId);
         return itemRequestMapper.itemRequestToItemRequestDto(itemRequest);
     }
 
     private User getUserFromRepository(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id, User.class));
+    }
+
+    private ItemRequest getItemRequestFromRepository(Long id) {
+        return itemRequestRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(id, ItemRequest.class));
     }
 }

@@ -3,7 +3,6 @@ package ru.practicum.shareit.request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.config.HeadersConfig;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestUpdateDto;
 
 import java.util.List;
 
@@ -27,13 +25,6 @@ public class ItemRequestController {
     public ItemRequestDto createItemRequest(@RequestHeader(HeadersConfig.USER_ID) Long userId,
                                             @RequestBody @Validated ItemRequestCreateDto itemRequestCreateDto) {
         return itemRequestService.createItemRequest(userId, itemRequestCreateDto);
-    }
-
-    @PatchMapping("/{requestId}")
-    public ItemRequestDto updateItemRequest(@RequestHeader(HeadersConfig.USER_ID) Long userId,
-                                            @PathVariable(name = "requestId") Long itemRequestId,
-                                            @RequestBody ItemRequestUpdateDto itemRequestUpdateDto) {
-        return itemRequestService.updateItemRequest(userId, itemRequestId, itemRequestUpdateDto);
     }
 
     @GetMapping
