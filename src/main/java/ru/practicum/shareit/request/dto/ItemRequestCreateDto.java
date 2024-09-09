@@ -6,8 +6,6 @@ import lombok.Data;
 
 @Data
 public class ItemRequestCreateDto {
-    @NotNull
-    @NotBlank
     private String name;
     @NotNull
     @NotBlank
