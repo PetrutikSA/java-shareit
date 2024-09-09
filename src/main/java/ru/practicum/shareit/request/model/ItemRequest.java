@@ -39,6 +39,6 @@ public class ItemRequest {
     @JoinTable(name = "offered_items",
             joinColumns = @JoinColumn(name = "request_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private List<Item> offeredItems;
+    private List<Item> items;
     private LocalDateTime created;
 }

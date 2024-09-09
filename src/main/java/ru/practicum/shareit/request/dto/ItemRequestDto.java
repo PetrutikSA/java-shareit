@@ -13,6 +13,6 @@ public class ItemRequestDto {
     private String name;
     private String description;
     private ItemRequestStatus status;
-    private List<ItemShortForRequestDto> offeredItems;
+    private List<ItemShortForRequestDto> items;
     private LocalDateTime created;
 }

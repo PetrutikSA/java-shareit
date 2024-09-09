@@ -42,6 +42,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     //Запросы должны возвращаться отсортированными от более новых к более старым.
     @Override
     public List<ItemRequestDto> getAllOwnItemRequests(Long userId) {
+
         return null;
     }
 
@@ -53,7 +54,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto getItemRequestById(Long userId, Long itemRequestId) {
-        return null;
+        ItemRequest itemRequest = itemRequestRepository.findById(itemRequestId)
+                .orElseThrow(() -> new NotFoundException(itemRequestId, ItemRequest.class));
+        return itemRequestMapper.itemRequestToItemRequestDto(itemRequest);
     }
 
     private User getUserFromRepository(Long id) {
