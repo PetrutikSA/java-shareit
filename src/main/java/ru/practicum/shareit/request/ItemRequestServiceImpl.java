@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -8,7 +9,10 @@ import ru.practicum.shareit.request.dto.ItemRequestUpdateDto;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService {
+    private final ItemRequestRepository itemRequestRepository;
+
     @Override
     public ItemRequestDto createItemRequest(Long userId, ItemRequestCreateDto itemRequestCreateDto) {
         return null;
