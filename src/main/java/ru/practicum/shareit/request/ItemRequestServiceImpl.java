@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -38,18 +39,22 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return null;
     }
 
-    //Получить список своих запросов вместе с данными об ответах на них.
-    //Запросы должны возвращаться отсортированными от более новых к более старым.
     @Override
     public List<ItemRequestDto> getAllOwnItemRequests(Long userId) {
-
-        return null;
+        List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequesterId(userId);
+        return itemRequests.stream()
+                .sorted(Comparator.comparing(ItemRequest::getCreated).reversed())
+                .map(itemRequestMapper::itemRequestToItemRequestDto)
+                .toList();
     }
 
-    //получить список запросов, созданных другими пользователями.
     @Override
     public List<ItemRequestDto> getAllOthersItemRequests(Long userId) {
-        return null;
+        List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequesterIdNot(userId);
+        return itemRequests.stream()
+                .sorted(Comparator.comparing(ItemRequest::getCreated).reversed())
+                .map(itemRequestMapper::itemRequestToItemRequestDto)
+                .toList();
     }
 
     @Override
