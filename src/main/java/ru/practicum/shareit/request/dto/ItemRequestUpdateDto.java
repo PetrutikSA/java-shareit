@@ -1,8 +1,10 @@
 package ru.practicum.shareit.request.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import ru.practicum.shareit.request.model.ItemRequestStatus;
 
+@Data
 public class ItemRequestUpdateDto {
     @NotBlank
     private String name;
