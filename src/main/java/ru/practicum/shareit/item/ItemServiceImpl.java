@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.exception.AccessForbiddenException;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final ItemMapper itemMapper;
@@ -47,6 +50,13 @@ public class ItemServiceImpl implements ItemService {
         User user = getUserFromRepository(userId);
         Item item = itemMapper.itemCreateToItem(itemCreateDto);
         item.setOwner(user);
+        Long itemRequestId = itemCreateDto.getRequestId();
+        if (itemRequestId != null && itemRequestId != 0) {
+            ItemRequest itemRequest = getItemRequestFromRepository(itemRequestId);
+            List<ItemRequest> itemRequests = new ArrayList<>();
+            itemRequests.add(itemRequest);
+            item.setItemRequests(itemRequests);
+        }
         item = itemRepository.save(item);
         log.info("Created new item: {}", item);
         return itemMapper.itemToItemDto(item);
@@ -99,6 +109,15 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemFromRepository(itemId);
         if (item.getOwner().getId() != userId)
             throw new AccessForbiddenException("Item update could be performed only by item's owner");
+        Long itemRequestId = itemUpdateDto.getRequestId();
+        if (itemRequestId != null && itemRequestId != 0) {
+            ItemRequest itemRequest = getItemRequestFromRepository(itemRequestId);
+            List<ItemRequest> itemRequests = item.getItemRequests();
+            if (itemRequests == null)
+                itemRequests = new ArrayList<>();
+            itemRequests.add(itemRequest);
+            item.setItemRequests(itemRequests);
+        }
         itemMapper.itemUpdateToItem(itemUpdateDto, item);
         item = itemRepository.save(item);
         log.info("Updated item: {}", item);
@@ -146,5 +165,10 @@ public class ItemServiceImpl implements ItemService {
     private Item getItemFromRepository(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(itemId, Item.class));
+    }
+
+    private ItemRequest getItemRequestFromRepository(Long itemRequestId) {
+        return itemRequestRepository.findById(itemRequestId)
+                .orElseThrow(() -> new NotFoundException(itemRequestId, ItemRequest.class));
     }
 }
