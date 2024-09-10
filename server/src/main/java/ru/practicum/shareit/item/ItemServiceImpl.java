@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -25,6 +26,7 @@ import ru.practicum.shareit.util.exception.BadRequestException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
@@ -46,6 +49,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
 
     @Override
+    @Transactional
     public ItemDto createItem(Long userId, ItemCreateDto itemCreateDto) {
         User user = getUserFromRepository(userId);
         Item item = itemMapper.itemCreateToItem(itemCreateDto);
@@ -104,6 +108,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(Long userId, ItemUpdateDto itemUpdateDto, Long itemId) {
         getUserFromRepository(userId); //user existence check
         Item item = getItemFromRepository(itemId);
@@ -125,6 +130,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public void deleteItem(Long userId, Long itemId) {
         getUserFromRepository(userId); //user existence check
         Item item = getItemFromRepository(itemId);
@@ -143,11 +149,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public CommentDto createComment(Long userId, Long itemId, CommentCreateDto commentCreateDto) {
         User author = getUserFromRepository(userId);
         Item item = getItemFromRepository(itemId);
         bookingRepository
-                .findAllByBookerIdAndItemIdAndEndLessThan(userId, itemId, LocalDateTime.now()).stream().findAny()
+                .findAllByBookerIdAndItemIdAndEndLessThan(userId, itemId,
+                        LocalDateTime.now(ZoneId.of("Europe/Moscow"))).stream().findAny()
                 .orElseThrow(() -> new BadRequestException("Comment add could be performed only by item's bookers"));
         Comment comment = commentMapper.commentCreateDtoToComment(commentCreateDto);
         comment.setItem(item);

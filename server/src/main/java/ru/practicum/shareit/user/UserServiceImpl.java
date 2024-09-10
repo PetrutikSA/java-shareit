@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.util.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -16,11 +17,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public UserDto createUser(UserCreateDto userCreateDto) {
         User user = userMapper.userCreateToUser(userCreateDto);
         emailVacantValidation(user.getEmail());
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         User user = getUserFromRepository(id);
         String updatedEmail = userUpdateDto.getEmail();
@@ -56,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         User user = getUserFromRepository(id); //check existence of User
         userRepository.deleteById(id);
@@ -67,6 +72,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(id, User.class));
     }
 
+    @Transactional
     private void emailVacantValidation(String email) {
         if (userRepository.existsByEmail(email))
             throw new UserConflictException(String.format("User with email %s already registered", email));

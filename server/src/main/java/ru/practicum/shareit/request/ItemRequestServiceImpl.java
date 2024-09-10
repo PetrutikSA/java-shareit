@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
@@ -17,12 +18,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
     private final ItemRequestMapper itemRequestMapper;
 
     @Override
+    @Transactional
     public ItemRequestDto createItemRequest(Long userId, ItemRequestCreateDto itemRequestCreateDto) {
         User requester = getUserFromRepository(userId);
         ItemRequest itemRequest = itemRequestMapper.itemRequestCreateToItemRequest(itemRequestCreateDto);
