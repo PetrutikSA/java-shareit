@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,32 +26,32 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody @Validated UserCreateDto userCreateDto) {
-        log.info("Creating user {}", userCreateDto);
+        log.info("Create user {}", userCreateDto);
         return userClient.createUser(userCreateDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUserById(@PathVariable Long id) {
-        log.info("Getting user with Id={}", id);
+    public ResponseEntity<Object> getUserById(@Positive @PathVariable Long id) {
+        log.info("Get user with Id={}", id);
         return userClient.getUserById(id);
     }
 
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
-        log.info("Getting all users");
+        log.info("Get all users");
         return userClient.getAllUsers();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long id,
+    public ResponseEntity<Object> updateUser(@Positive @PathVariable Long id,
                                              @RequestBody @Validated UserUpdateDto userUpdateDto) {
-        log.info("Updating user {}", userUpdateDto);
+        log.info("Update user {}", userUpdateDto);
         return userClient.updateUser(id, userUpdateDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
-        log.info("Deleting user with id = {}", id);
+    public ResponseEntity<Object> deleteUser(@Positive @PathVariable Long id) {
+        log.info("Delete user with id = {}", id);
         return userClient.deleteUser(id);
     }
 }
