@@ -38,7 +38,6 @@ public class UserControllerValidationTests {
 
     private UserCreateDto userCreateDto;
     private UserUpdateDto userUpdateDto;
-    private String userCreatedDtoJson;
     private long userId;
 
     @BeforeEach
@@ -46,7 +45,6 @@ public class UserControllerValidationTests {
         UserTestObjects userTestObjects = new UserTestObjects();
         userCreateDto = userTestObjects.userCreateDto;
         userUpdateDto = userTestObjects.userUpdateDto;
-        userCreatedDtoJson = userTestObjects.userCreatedDtoJson;
         userId = userTestObjects.userId;
     }
 
