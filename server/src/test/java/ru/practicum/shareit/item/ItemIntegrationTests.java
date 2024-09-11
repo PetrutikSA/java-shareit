@@ -83,7 +83,7 @@ public class ItemIntegrationTests {
     }
 
     @Test
-    void createUserFullIntegrationTest() {
+    void createItemFullIntegrationTest() {
         createUser();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -104,7 +104,7 @@ public class ItemIntegrationTests {
     }
 
     @Test
-    void getAllUsersFullIntegrationTest(){
+    void getAllItemsFullIntegrationTest(){
         createUser();
 
         HttpHeaders headers = new HttpHeaders();
@@ -148,7 +148,7 @@ public class ItemIntegrationTests {
     }
 
     @Test
-    void deleteUserFullIntegrationTest(){
+    void deleteItemFullIntegrationTest(){
         createUser();
 
         HttpHeaders headers = new HttpHeaders();
