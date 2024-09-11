@@ -13,7 +13,6 @@ import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingUpdateDto;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,13 +44,13 @@ public class BookingJsonTests {
     }
 
     @Test
-    void correctUpdateObjectSerialization() throws IOException  {
+    void correctUpdateObjectSerialization() throws IOException {
         JsonContent<BookingUpdateDto> json = jacksonUpdateTester.write(bookingUpdateDto);
         assertThat(json).extractingJsonPathStringValue("$.status").isEqualTo(bookingUpdateDto.getStatus().toString());
     }
 
     @Test
-    void correctCreateObjectDeserialization() throws IOException  {
+    void correctCreateObjectDeserialization() throws IOException {
         String json = mapper.writeValueAsString(bookingCreateDto);
 
         BookingCreateDto parsedObject = jacksonCreateTester.parseObject(json);
@@ -62,7 +61,7 @@ public class BookingJsonTests {
     }
 
     @Test
-    void correctUpdateObjectDeserialization() throws IOException  {
+    void correctUpdateObjectDeserialization() throws IOException {
         String json = mapper.writeValueAsString(bookingUpdateDto);
 
         BookingUpdateDto parsedObject = jacksonUpdateTester.parseObject(json);

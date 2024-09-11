@@ -47,6 +47,7 @@ public class UserRepositoryTest {
         Assertions.assertEquals(updatedUser.getName(), actualUser.getName());
         Assertions.assertEquals(updatedUser.getEmail(), actualUser.getEmail());
     }
+
     @Test
     void checkEmailExistenceTest() {
         userRepository.save(user);

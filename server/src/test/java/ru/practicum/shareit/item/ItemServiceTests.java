@@ -136,6 +136,7 @@ public class ItemServiceTests {
         itemService.deleteItem(userId, itemId);
         Mockito.verify(itemRepository).deleteById(itemId);
     }
+
     @Test
     void getByIdTest() {
         Mockito.when(userRepository.findById(Mockito.any()))

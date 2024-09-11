@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,20 +19,15 @@ import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingUpdateDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.config.HeadersConfig;
 import ru.practicum.shareit.item.ItemTestObjects;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserTestObjects;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -143,7 +137,7 @@ public class BookingIntegrationTest {
 
 
     @Test
-    void getBookingByIdIntegrationTest(){
+    void getBookingByIdIntegrationTest() {
         createUser(bookerCreateDto);
         createUser(ownerCreateDto);
         createItem(itemCreateDto);
@@ -174,7 +168,7 @@ public class BookingIntegrationTest {
                 .usingRecursiveComparison().ignoringFields("id", "start", "end").isEqualTo(expectedBookingDtoCreated);
     }
 
-    private void createUser(UserCreateDto userCreateDto){
+    private void createUser(UserCreateDto userCreateDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         HttpEntity<UserCreateDto> request = new HttpEntity<>(userCreateDto, headers);
@@ -183,7 +177,8 @@ public class BookingIntegrationTest {
                 "http://localhost:9090/users", HttpMethod.POST, request, UserDto.class
         );
     }
-    private void createItem(ItemCreateDto itemCreateDto){
+
+    private void createItem(ItemCreateDto itemCreateDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set(HeadersConfig.USER_ID, String.valueOf(userId));

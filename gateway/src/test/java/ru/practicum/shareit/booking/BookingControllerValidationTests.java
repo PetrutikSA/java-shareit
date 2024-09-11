@@ -16,6 +16,7 @@ import ru.practicum.shareit.config.HeadersConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +45,7 @@ public class BookingControllerValidationTests {
     }
 
     @Test
-    void saveStartInPastBadRequest() throws Exception{
+    void saveStartInPastBadRequest() throws Exception {
         bookingCreateDto.setStart(LocalDateTime.now().minusHours(5));
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingCreateDto))
@@ -56,7 +57,7 @@ public class BookingControllerValidationTests {
     }
 
     @Test
-    void saveEndInPastBadRequest() throws Exception{
+    void saveEndInPastBadRequest() throws Exception {
         bookingCreateDto.setEnd(LocalDateTime.now().minusHours(5));
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingCreateDto))
@@ -68,7 +69,7 @@ public class BookingControllerValidationTests {
     }
 
     @Test
-    void updateStartInPastBadRequest() throws Exception{
+    void updateStartInPastBadRequest() throws Exception {
         bookingCreateDto.setStart(LocalDateTime.now().minusHours(5));
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingCreateDto))
@@ -78,8 +79,9 @@ public class BookingControllerValidationTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
-    void updateEndInPastBadRequest() throws Exception{
+    void updateEndInPastBadRequest() throws Exception {
         bookingCreateDto.setEnd(LocalDateTime.now().minusHours(5));
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingCreateDto))

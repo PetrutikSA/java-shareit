@@ -86,6 +86,7 @@ public class BookingRepositoryTests {
         Assertions.assertEquals(updatedBooking.getStart(), actualBooking.getStart());
         Assertions.assertEquals(updatedBooking.getStatus(), actualBooking.getStatus());
     }
+
     @Test
     void findAllByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualTest() {
         booker.setId(0);

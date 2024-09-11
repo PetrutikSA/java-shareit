@@ -54,7 +54,6 @@ public class ItemIntegrationTests {
     private ItemWithNearestBookingDatesDto secondExpectedItemDtoWithBookingsDates;
     private User user;
     private UserCreateDto userCreateDto;
-    private
 
     @BeforeEach
     void setUp() {
@@ -104,7 +103,7 @@ public class ItemIntegrationTests {
     }
 
     @Test
-    void getAllItemsFullIntegrationTest(){
+    void getAllItemsFullIntegrationTest() {
         createUser();
 
         HttpHeaders headers = new HttpHeaders();
@@ -143,12 +142,12 @@ public class ItemIntegrationTests {
                 .usingRecursiveComparison().ignoringFields("id", "comments")
                 .isEqualTo(expectedItemDtoWithBookingsDatesCreated);
         assertThat(usersList.get(1))
-                .usingRecursiveComparison().ignoringFields("id","comments")
+                .usingRecursiveComparison().ignoringFields("id", "comments")
                 .isEqualTo(secondExpectedItemDtoWithBookingsDates);
     }
 
     @Test
-    void deleteItemFullIntegrationTest(){
+    void deleteItemFullIntegrationTest() {
         createUser();
 
         HttpHeaders headers = new HttpHeaders();
@@ -173,7 +172,7 @@ public class ItemIntegrationTests {
         Assertions.assertNull(response.getBody());
     }
 
-    private void createUser(){
+    private void createUser() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         HttpEntity<UserCreateDto> request = new HttpEntity<>(userCreateDto, headers);

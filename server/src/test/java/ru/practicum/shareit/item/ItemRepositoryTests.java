@@ -62,6 +62,7 @@ public class ItemRepositoryTests {
         Assertions.assertEquals(updatedItem.getName(), actualItem.getName());
         Assertions.assertEquals(updatedItem.getDescription(), actualItem.getDescription());
     }
+
     @Test
     void findAllByNameOrDescriptionTest() {
         user.setId(0);

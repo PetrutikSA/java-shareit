@@ -19,7 +19,6 @@ import ru.practicum.shareit.item.ItemTestObjects;
 import ru.practicum.shareit.item.dto.CommentMapperImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapperImpl;
-import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.UserRepository;
@@ -27,7 +26,6 @@ import ru.practicum.shareit.user.UserTestObjects;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.exception.AccessForbiddenException;
-import ru.practicum.shareit.util.exception.BadRequestException;
 import ru.practicum.shareit.util.exception.NotFoundException;
 
 import java.util.List;
@@ -150,6 +148,7 @@ public class BookingServiceTests {
             bookingService.replyToBookingRequest(userId, bookingId, true);
         });
     }
+
     @Test
     void getByIdTest() {
         Mockito.when(bookingRepository.findByIdWhereBookerIdOrItemOwnerId(Mockito.any(), Mockito.any()))

@@ -85,19 +85,19 @@ public class ItemControllerValidationTests {
     }
 
     @Test
-    void saveWithBlankNameBadRequest() throws Exception{
+    void saveWithBlankNameBadRequest() throws Exception {
         itemCreateDto.setName("       ");
         mvc.perform(post("/items")
-                .content(mapper.writeValueAsString(itemCreateDto))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .header(HeadersConfig.USER_ID, userId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(mapper.writeValueAsString(itemCreateDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void saveWithNullDescriptionBadRequest() throws Exception{
+    void saveWithNullDescriptionBadRequest() throws Exception {
         itemCreateDto.setName(null);
         mvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemCreateDto))
@@ -109,7 +109,7 @@ public class ItemControllerValidationTests {
     }
 
     @Test
-    void updateWithBlankNameBadRequest() throws Exception{
+    void updateWithBlankNameBadRequest() throws Exception {
         itemUpdateDto.setName("         ");
         mvc.perform(patch("/items/{itemId}", 1)
                         .content(mapper.writeValueAsString(itemUpdateDto))
@@ -121,7 +121,7 @@ public class ItemControllerValidationTests {
     }
 
     @Test
-    void updateWithBlankDescriptionBadRequest() throws Exception{
+    void updateWithBlankDescriptionBadRequest() throws Exception {
         itemUpdateDto.setDescription("         ");
         mvc.perform(patch("/items/{itemId}", 1)
                         .content(mapper.writeValueAsString(itemUpdateDto))
