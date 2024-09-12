@@ -155,7 +155,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemFromRepository(itemId);
         bookingRepository
                 .findAllByBookerIdAndItemIdAndEndLessThan(userId, itemId,
-                        LocalDateTime.now(ZoneId.of("Europe/Moscow"))).stream().findAny()
+                        LocalDateTime.now()).stream().findAny()
                 .orElseThrow(() -> new BadRequestException("Comment add could be performed only by item's bookers"));
         Comment comment = commentMapper.commentCreateDtoToComment(commentCreateDto);
         comment.setItem(item);
