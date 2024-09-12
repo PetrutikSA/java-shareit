@@ -165,4 +165,39 @@ public class BookingControllerValidationTests {
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
+    @Test
+    void allBookerBookingsGetTest() throws Exception {
+        Mockito.when(bookingClient.getAllBookersBookings(userId, BookingState.ALL))
+                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(List.of(bookingCreateDto, bookingUpdateDto)),
+                        HttpStatus.OK));
+
+        mvc.perform(get("/bookings")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void allBookingsNotCorrectStateBadRequestTest() throws Exception {
+        mvc.perform(get("/bookings/owner")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .param("state", "WRONG")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void allBookerBookingsGetNotCorrectStateBadRequestTest() throws Exception {
+        mvc.perform(get("/bookings")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .param("state", "WRONG")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }

@@ -51,7 +51,7 @@ public class BookingsController {
 
     @GetMapping
     public ResponseEntity<Object> getAllBookersBookings(@RequestHeader(HeadersConfig.USER_ID) Long userId,
-                                                        @RequestParam(defaultValue = "ALL") String stateParam) {
+                                                        @RequestParam(name = "state", defaultValue = "ALL") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get booking made by booker with id={}, with state {}", userId, stateParam);
@@ -60,7 +60,7 @@ public class BookingsController {
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getAllOwnersBookings(@RequestHeader(HeadersConfig.USER_ID) Long userId,
-                                                       @RequestParam(defaultValue = "ALL") String stateParam) {
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get booking made by item owner with id={}, with state {}", userId, stateParam);
