@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.dto.ItemWithNearestBookingDatesDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
 public class ItemTestObjects {
@@ -11,12 +13,14 @@ public class ItemTestObjects {
     public ItemUpdateDto itemUpdateDto;
     public ItemDto expectedItemDtoCreated;
     public ItemDto secondExpectedItemDto;
+    public CommentCreateDto commentCreateDto;
     public ItemWithNearestBookingDatesDto expectedItemDtoWithBookingsDatesCreated;
     public ItemWithNearestBookingDatesDto secondExpectedItemDtoWithBookingsDates;
     public ItemDto expectedItemDtoUpdated;
     public Item item;
     public Item updatedItem;
     public Item secondItem;
+    public Comment comment;
     public long itemId = 1L;
     public long secondItemId = 2L;
     public long userId = 1L;
@@ -79,5 +83,10 @@ public class ItemTestObjects {
         secondExpectedItemDtoWithBookingsDates.setName(secondExpectedItemDto.getName());
         secondExpectedItemDtoWithBookingsDates.setDescription(secondExpectedItemDto.getDescription());
         secondExpectedItemDtoWithBookingsDates.setAvailable(secondExpectedItemDto.getAvailable());
+
+        commentCreateDto = new CommentCreateDto();
+        commentCreateDto.setText("text");
+        comment = new Comment();
+        comment.setText(commentCreateDto.getText());
     }
 }

@@ -173,4 +173,18 @@ public class BookingServiceTests {
         Assertions.assertEquals(expectedBookingDtoCreated, actualBookings.get(0));
         Assertions.assertEquals(expectedBookingDtoUpdated, actualBookings.get(1));
     }
+
+    @Test
+    void getAllOwnBookingTest() {
+        Mockito.when(userRepository.findById(Mockito.any()))
+                .thenReturn(Optional.ofNullable(booker));
+        Mockito.when(bookingRepository.findAllByItemOwnerId(Mockito.any()))
+                .thenReturn(List.of(booking, updatedBooking));
+
+        List<BookingDto> actualBookings = bookingService.getAllOwnersBookings(userId, BookingState.ALL);
+
+        Assertions.assertNotNull(actualBookings);
+        Assertions.assertEquals(expectedBookingDtoCreated, actualBookings.get(0));
+        Assertions.assertEquals(expectedBookingDtoUpdated, actualBookings.get(1));
+    }
 }
