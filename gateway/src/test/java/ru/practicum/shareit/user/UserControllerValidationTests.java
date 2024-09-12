@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.config.HeadersConfig;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
@@ -71,7 +72,7 @@ public class UserControllerValidationTests {
         mvc.perform(patch("/users/{userId}", userId)
                         .content(mapper.writeValueAsString(userUpdateDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Shareit-User-Id", userId)
+                        .header(HeadersConfig.USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -122,7 +123,7 @@ public class UserControllerValidationTests {
         mvc.perform(patch("/users/{userId}", userId)
                         .content(mapper.writeValueAsString(userUpdateDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Shareit-User-Id", userId)
+                        .header(HeadersConfig.USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,7 +137,7 @@ public class UserControllerValidationTests {
         mvc.perform(patch("/users/{userId}", userId)
                         .content(mapper.writeValueAsString(userUpdateDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Shareit-User-Id", userId)
+                        .header(HeadersConfig.USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -150,7 +151,7 @@ public class UserControllerValidationTests {
 
         mvc.perform(get("/users")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Shareit-User-Id", userId)
+                        .header(HeadersConfig.USER_ID, userId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -165,7 +166,7 @@ public class UserControllerValidationTests {
 
         mvc.perform(get("/users/{userId}", userId)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Shareit-User-Id", userId)
+                        .header(HeadersConfig.USER_ID, userId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(userCreateDto.getName())))
