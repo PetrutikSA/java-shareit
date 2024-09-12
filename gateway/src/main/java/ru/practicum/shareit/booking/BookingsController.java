@@ -24,8 +24,8 @@ import ru.practicum.shareit.config.HeadersConfig;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class BookingController {
-    private final BookingClient bookingClient;
+public class BookingsController {
+    private final BookingsClient bookingClient;
 
     @PostMapping
     public ResponseEntity<Object> createBookingRequest(@RequestHeader(HeadersConfig.USER_ID) Long userId,

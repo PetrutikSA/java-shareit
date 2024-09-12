@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
@@ -7,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemUpdateDto;
 public class ItemTestObjects {
     public ItemCreateDto itemCreateDto;
     public ItemUpdateDto itemUpdateDto;
+    public CommentCreateDto commentCreateDto;
     public long itemId = 1L;
     public long secondItemId = 2L;
     public long userId = 1L;
@@ -21,5 +23,8 @@ public class ItemTestObjects {
         itemUpdateDto.setName("updated item");
         itemUpdateDto.setDescription("updated description");
         itemUpdateDto.setAvailable(false);
+
+        commentCreateDto = new CommentCreateDto();
+        commentCreateDto.setText("text");
     }
 }

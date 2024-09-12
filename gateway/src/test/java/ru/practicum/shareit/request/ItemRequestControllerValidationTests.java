@@ -116,4 +116,20 @@ public class ItemRequestControllerValidationTests {
                 .andExpect(jsonPath("$.name", is(itemRequestCreateDto.getName())))
                 .andExpect(jsonPath("$.description", is(itemRequestCreateDto.getDescription())));
     }
+
+    @Test
+    void allOthersItemsRequestsGetTest() throws Exception {
+        Mockito.when(itemRequestClient.getAllOthersItemRequests(userId))
+                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(List.of(itemRequestCreateDto)),
+                        HttpStatus.OK));
+
+        mvc.perform(get("/requests/all")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is(itemRequestCreateDto.getName())))
+                .andExpect(jsonPath("$[0].description", is(itemRequestCreateDto.getDescription())));
+    }
 }

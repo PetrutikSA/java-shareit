@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.config.HeadersConfig;
+import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
@@ -40,6 +41,7 @@ public class ItemControllerValidationTests {
 
     private ItemCreateDto itemCreateDto;
     private ItemUpdateDto itemUpdateDto;
+    private CommentCreateDto commentCreateDto;
     private long userId;
     private long itemId;
 
@@ -48,6 +50,7 @@ public class ItemControllerValidationTests {
         ItemTestObjects itemTestObjects = new ItemTestObjects();
         itemCreateDto = itemTestObjects.itemCreateDto;
         itemUpdateDto = itemTestObjects.itemUpdateDto;
+        commentCreateDto = itemTestObjects.commentCreateDto;
         userId = 1L;
         itemId = 1L;
     }
@@ -171,5 +174,34 @@ public class ItemControllerValidationTests {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is(itemCreateDto.getName())))
                 .andExpect(jsonPath("$[1].name", is(itemUpdateDto.getName())));
+    }
+
+    @Test
+    void itemGetByIdTest() throws Exception {
+        Mockito.when(itemClient.getItemById(userId, itemId))
+                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(itemCreateDto), HttpStatus.OK));
+
+        mvc.perform(get("/items/{itemId}", itemId)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(itemCreateDto.getName())))
+                .andExpect(jsonPath("$.description", is(itemCreateDto.getDescription())));
+    }
+
+    @Test
+    void createCommentTest() throws Exception {
+        Mockito.when(itemClient.createComment(eq(userId), eq(itemId), Mockito.any()))
+                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(commentCreateDto), HttpStatus.OK));
+
+        mvc.perform(post("/items/{itemId}/comment", itemId)
+                        .content(mapper.writeValueAsString(commentCreateDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(HeadersConfig.USER_ID, userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.text", is(commentCreateDto.getText())));
     }
 }
