@@ -1,4 +1,7 @@
 <div align="center">
+  <br />
+    <img src="https://raw.githubusercontent.com/PetrutikSA/java-shareit/refs/heads/main/logo.jpg" alt="Project Banner">
+  <br />
 <h2>SHARE IT - Сервис для шеринга вещей</h2>
 </div>
 
